@@ -1,0 +1,99 @@
+{
+  "region": "eu-central-1",
+  "rest_apis": [
+    {
+      "id": "a1b2c3d4e5",
+      "name": "checkout-api",
+      "endpointTypes": [
+        "REGIONAL"
+      ],
+      "disableExecuteApiEndpoint": true,
+      "tags": {},
+      "stages": [
+        {
+          "stageName": "prod",
+          "deploymentId": "dep001",
+          "accessLogSettings": {
+            "destinationArn": "arn:aws:logs:eu-central-1:111122223333:log-group:/aws/apigateway/checkout",
+            "format": "{\"requestId\":\"$context.requestId\",\"status\":\"$context.status\",\"ip\":\"$context.identity.sourceIp\"}"
+          },
+          "methodSettings": {
+            "*/*": {
+              "loggingLevel": "INFO",
+              "metricsEnabled": false,
+              "throttlingRateLimit": 200,
+              "throttlingBurstLimit": 100,
+              "cachingEnabled": true,
+              "cacheDataEncrypted": true
+            }
+          },
+          "cacheClusterEnabled": true,
+          "tracingEnabled": false,
+          "webAclArn": "arn:aws:wafv2:eu-central-1:111122223333:regional/webacl/checkout/1a2b3c",
+          "clientCertificateId": "",
+          "canarySettings": {}
+        }
+      ],
+      "methods": [
+        {
+          "path": "/checkout",
+          "httpMethod": "POST",
+          "authorizationType": "COGNITO_USER_POOLS",
+          "authorizerId": "au7h01",
+          "apiKeyRequired": false
+        },
+        {
+          "path": "/checkout",
+          "httpMethod": "OPTIONS",
+          "authorizationType": "NONE",
+          "authorizerId": "",
+          "apiKeyRequired": false
+        }
+      ]
+    }
+  ],
+  "http_apis": [],
+  "domain_names": [
+    {
+      "domainName": "api.example.com",
+      "securityPolicy": "TLS_1_2",
+      "endpointTypes": [
+        "REGIONAL"
+      ],
+      "mutualTlsAuthentication": {},
+      "mappings": [
+        {
+          "apiId": "a1b2c3d4e5",
+          "stage": "prod",
+          "basePath": "(none)"
+        }
+      ]
+    }
+  ],
+  "api_keys": [
+    {
+      "id": "key1",
+      "name": "partner-a",
+      "enabled": true,
+      "usagePlans": [
+        "basic"
+      ]
+    }
+  ],
+  "usage_plans": [
+    {
+      "id": "up1",
+      "name": "basic",
+      "throttle": {
+        "rateLimit": 100,
+        "burstLimit": 50
+      },
+      "apiStages": [
+        {
+          "apiId": "a1b2c3d4e5",
+          "stage": "prod"
+        }
+      ]
+    }
+  ]
+}

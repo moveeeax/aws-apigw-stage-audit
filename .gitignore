@@ -1,0 +1,21 @@
+# Python build and cache artefacts, anchored to the repo root so nothing
+# under tests/fixtures/ or examples/ is ever dropped by accident.
+__pycache__/
+*.py[cod]
+/build/
+/dist/
+/.eggs/
+*.egg-info/
+/.venv/
+/venv/
+/.pytest_cache/
+/.ruff_cache/
+/.coverage
+/htmlcov/
+
+# Audit payloads dumped by --dump-json during local runs.
+/*.dump.json
+
+# Fixtures and examples are part of the test suite.
+!tests/fixtures/**
+!examples/**

@@ -1,0 +1,122 @@
+{
+  "region": "eu-central-1",
+  "generated_at": "2026-11-09T15:00:00+00:00",
+  "rest_apis": [
+    {
+      "id": "zz9plural",
+      "name": "legacy-partner-api",
+      "endpointTypes": ["EDGE"],
+      "disableExecuteApiEndpoint": false,
+      "tags": {"apigw:require-client-cert": "true"},
+      "stages": [
+        {
+          "stageName": "prod",
+          "deploymentId": "dep-2019",
+          "accessLogSettings": {},
+          "methodSettings": {
+            "*/*": {
+              "loggingLevel": "OFF",
+              "metricsEnabled": false,
+              "throttlingRateLimit": -1,
+              "throttlingBurstLimit": -1,
+              "cachingEnabled": true,
+              "cacheDataEncrypted": false
+            }
+          },
+          "cacheClusterEnabled": true,
+          "tracingEnabled": false,
+          "webAclArn": "",
+          "clientCertificateId": "",
+          "canarySettings": {"percentTraffic": 10.0, "deploymentId": "dep-canary"}
+        },
+        {
+          "stageName": "sandbox",
+          "deploymentId": "dep-sandbox",
+          "accessLogSettings": {
+            "destinationArn": "arn:aws:logs:eu-central-1:111122223333:log-group:/aws/apigateway/sandbox",
+            "format": "{\"ip\":\"$context.identity.sourceIp\"}"
+          },
+          "methodSettings": {
+            "*/*": {
+              "loggingLevel": "INFO",
+              "metricsEnabled": true,
+              "throttlingRateLimit": -1,
+              "throttlingBurstLimit": -1,
+              "cachingEnabled": false,
+              "cacheDataEncrypted": false
+            }
+          },
+          "cacheClusterEnabled": false,
+          "tracingEnabled": true,
+          "webAclArn": "arn:aws:wafv2:eu-central-1:111122223333:regional/webacl/sandbox/9f8e7d",
+          "clientCertificateId": "cert01",
+          "canarySettings": {}
+        }
+      ],
+      "methods": [
+        {
+          "path": "/partners/{id}",
+          "httpMethod": "GET",
+          "authorizationType": "NONE",
+          "authorizerId": "",
+          "apiKeyRequired": false
+        },
+        {
+          "path": "/partners/{id}",
+          "httpMethod": "DELETE",
+          "authorizationType": "NONE",
+          "authorizerId": "",
+          "apiKeyRequired": true
+        }
+      ]
+    }
+  ],
+  "http_apis": [
+    {
+      "apiId": "h7t9kk2",
+      "name": "events-ingest",
+      "protocolType": "HTTP",
+      "disableExecuteApiEndpoint": false,
+      "tags": {},
+      "stages": [
+        {
+          "stageName": "$default",
+          "deploymentId": "",
+          "accessLogSettings": {"destinationArn": "", "format": ""},
+          "defaultRouteSettings": {
+            "detailedMetricsEnabled": false,
+            "throttlingRateLimit": null,
+            "throttlingBurstLimit": null
+          },
+          "autoDeploy": true
+        }
+      ],
+      "routes": [
+        {"routeKey": "POST /events", "authorizationType": "NONE", "authorizerId": "", "apiKeyRequired": false},
+        {"routeKey": "OPTIONS /events", "authorizationType": "NONE", "authorizerId": "", "apiKeyRequired": false},
+        {"routeKey": "GET /health", "authorizationType": "JWT", "authorizerId": "jwt1", "apiKeyRequired": false}
+      ]
+    }
+  ],
+  "domain_names": [
+    {
+      "domainName": "partners.example.com",
+      "securityPolicy": "TLS_1_0",
+      "endpointTypes": ["EDGE"],
+      "mutualTlsAuthentication": {"truststoreUri": "s3://partner-truststore/ca.pem"},
+      "mappings": [{"apiId": "zz9plural", "stage": "prod", "basePath": "(none)"}]
+    }
+  ],
+  "api_keys": [
+    {"id": "key9", "name": "orphan-key", "enabled": true, "usagePlans": []},
+    {"id": "key8", "name": "partner-b", "enabled": true, "usagePlans": ["gold"]}
+  ],
+  "usage_plans": [
+    {
+      "id": "up9",
+      "name": "gold",
+      "throttle": {"rateLimit": 50, "burstLimit": 25},
+      "apiStages": [{"apiId": "zz9plural", "stage": "sandbox"}]
+    }
+  ]
+}
